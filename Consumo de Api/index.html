@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consumo de Api com o Axios</title>
+  <script>
+    var axiosConfig = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <h2 class="login-page">Login</h2>
+    <input class="login-page" type="text" name="email" id="email" placeholder="email">
+    <br>
+    <input class="login-page" type="text" name="password" id="password" placeholder="password">
+    <br>
+    <button class="login-page" type="button" onclick="login()">Entrar</button>
+  </div>
+  <br>
+  <br>
+  <hr>
+
+  <h4>Lista de Filmes</h4>
+  <ul id="movies"></ul>
+  <hr>
+  <h4>Novo Filme</h4>
+  <input type="text" name="title" id="title" placeholder="Titulo">
+  <input type="number" name="year" id="year" placeholder="Ano">
+  <input type="text" name="platform" id="platform" placeholder="Plataforma">
+  <button type="button" onclick="addMovie()">Adicionar Filme</button>
+  <hr>
+  <h4>Editar Filmes</h4>
+  <input type="text" name="idEdit" id="idEdit" placeholder="Id" readonly>
+  <input type="text" name="titleEdit" id="titleEdit" placeholder="Titulo">
+  <input type="number" name="yearEdit" id="yearEdit" placeholder="Ano">
+  <input type="text" name="platformEdit" id="platformEdit" placeholder="Plataforma">
+  <button type="button" onclick="editMovie()">Editar Filme</button>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+  login = () => {
+    var emailField = document.getElementById("email");
+    var passwordField = document.getElementById("password");
+
+    var email = emailField.value;
+    var password = passwordField.value;
+
+    axios.post("http://localhost:28555/auth", {email, password}).then(res => {
+      var token = res.data.token;
+      localStorage.setItem("token", token);
+      axiosConfig.headers.Authorization = "Bearer " + localStorage.getItem("token");
+      location.reload();
+    }).catch(err => {
+      alert("login inválido")
+    })
+  }
+
+
+
+  addMovie = () => {
+    var titleInput = document.getElementById("title");
+    var yearInput = document.getElementById("year");
+    var platformInput = document.getElementById("platform");
+
+    var movie = {
+      title: titleInput.value,
+      year: yearInput.value,
+      platform: platformInput.value
+    }
+    axios.post("http://localhost:28555/movies", movie, axiosConfig).then(response => {
+      if (response.status == 200) {
+        alert("Filme adicionado com sucesso!");
+        location.reload();
+
+      }
+    }).catch(err => {
+      alert(err);
+    })
+
+  };
+
+  delMovie = (listItem) => {
+    var id = listItem.getAttribute("data-id");
+    axios.delete("http://localhost:28555/movies/" + id, axiosConfig).then(response => {
+      alert("Filme deletado com sucesso");
+      location.reload();
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  loadMovie = (listItem) => {
+    var id = listItem.getAttribute("data-id");
+    var title = listItem.getAttribute("data-title");
+    var year = listItem.getAttribute("data-year");
+    var platform = listItem.getAttribute("data-platform");
+    document.getElementById("idEdit").value = id;
+    document.getElementById("titleEdit").value = title;
+    document.getElementById("yearEdit").value = year;
+    document.getElementById("platformEdit").value = platform;
+
+
+  }
+  editMovie = () => {
+
+    var idInput = document.getElementById("idEdit")
+    var titleInput = document.getElementById("titleEdit");
+    var yearInput = document.getElementById("yearEdit");
+    var platformInput = document.getElementById("platformEdit");
+
+    var movie = {
+      title: titleInput.value,
+      year: yearInput.value,
+      platform: platformInput.value
+    }
+
+    var id = idInput.value;
+    axios.put("http://localhost:28555/movies/" + id, movie, axiosConfig).then(response => {
+      if (response.status == 200) {
+        alert("Filme editado com sucesso!");
+        location.reload();
+
+      }
+    }).catch(err => {
+      alert(err);
+    })
+
+  }
+
+
+  axios.get("http://localhost:28555/movies", axiosConfig).then(response => {
+    var movies = response.data;
+    var list = document.getElementById("movies");
+
+    movies.forEach(movie => {
+      var item = document.createElement("li");
+
+      item.setAttribute("data-id", movie.id);
+      item.setAttribute("data-title", movie.title);
+      item.setAttribute("data-year", movie.year);
+      item.setAttribute("data-platform", movie.platform);
+
+
+      item.innerHTML = movie.id + " - " + movie.title + " - " + movie.platform + " --- ";
+
+      var deleteBtn = document.createElement("button");
+      deleteBtn.innerHTML = "Deletar";
+
+      item.appendChild(deleteBtn);
+      deleteBtn.addEventListener("click", function () {
+        delMovie(item);
+      })
+
+      var editBtn = document.createElement("button");
+      editBtn.innerHTML = "Editar";
+      item.appendChild(editBtn);
+      editBtn.addEventListener("click", function () {
+        loadMovie(item);
+      })
+
+      list.appendChild(item);
+    })
+
+  }).catch(error => {
+    console.log(error);
+  })
+</script>
+
+
+</html>

@@ -1,0 +1,15 @@
+.container {
+  height: 10em;
+  position: relative
+}
+
+.login-page {
+  margin-top: 5px;
+  border-radius: 3px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
