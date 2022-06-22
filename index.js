@@ -38,41 +38,94 @@ auth = (req, res, next) => {
 
 }
 
-
-
-
-
-// Banco de dados falso
+// Banco de dados 
 let DB = {
-  movies: [
-
+   palestrantes: [
+    {
+      id: 1,
+      nome: "Jessé Rocha",
+      empresa: "Markedin",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 2,
+      nome: "Paulo Guedes",
+      empresa: "#######",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 3,
+      nome: "Thiago Nigro",
+      empresa: "O primo rico",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 4,
+      nome: "Filipi Lima",
+      empresa: "arkigai",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 5,
+      nome: "Jessé Rocha",
+      empresa: "Markedin",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 6,
+      nome: "Paulo Guedes",
+      empresa: "#######",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 7,
+      nome: "Thiago Nigro",
+      empresa: "O primo rico",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 8,
+      nome: "Filipi Lima",
+      empresa: "arkigai",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 9,
+      nome: "Jessé Rocha",
+      empresa: "Markedin",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
+    {
+      id: 10,
+      nome: "Paulo Guedes",
+      empresa: "#######",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
+    },
     {
       id: 11,
-      title: "Home Team",
-      year: 2022,
-      platform: "Netflix"
+      nome: "Thiago Nigro",
+      empresa: "O primo rico",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg" 
     },
-
     {
       id: 12,
-      title: "Swap Shop - Serie",
-      year: 2022,
-      platform: "Netflix"
+      nome: "Filipi Lima",
+      empresa: "arkigai",
+      tema: "etc",
+      img: "/home/oguuiholiv/Documentos/PROJETOS/REACT/varejo/src/assets/users/01.jpg"
     },
 
-    {
-      id: 13,
-      title: "Two and a Half Men",
-      year: 2003,
-      platform: "Prime Video"
-    },
-
-    {
-      id: 14,
-      title: "Mr Robot",
-      year: 2015,
-      platform: "Prime Video"
-    }
   ],
   users: [
     {
@@ -84,19 +137,19 @@ let DB = {
   ]
 }
 // Lista os dados dentro de movies
-app.get("/movies", auth, (req, res) => {
+app.get("/palestrantes", (req, res) => {
   res.statusCode = 200;
-  res.json(DB.movies);
+  res.json(DB.palestrantes);
 })
 
 // Lista os dados dentro de movie Id
-app.get("/movies/:id",auth, (req, res) => {
+app.get("/palestrantes/:id", (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
 
     var id = parseInt(req.params.id);
-    var movie = DB.movies.find(m => m.id == id);
+    var movie = DB.palestrantes.find(m => m.id == id);
 
     if (movie != undefined) {
       res.statusCode = 200;
@@ -109,55 +162,58 @@ app.get("/movies/:id",auth, (req, res) => {
 })
 
 // Cria / Adiciona um novo filme
-app.post("/movies",auth, (req, res) => {
-  var { title, year, platform } = req.body;
+app.post("/palestrantes", (req, res) => {
+  var { id, nome, aniversario, hour } = req.body;
 
   DB.movies.push({
-    id: 25,
-    title,
-    year,
-    platform
+    id,
+    nome,
+    aniversario,
+    hour
   });
   res.sendStatus(200);
 });
 
 // Deleta um filme
-app.delete("/movies/:id",auth, (req, res) => {
+app.delete("/palestrantes/:id", (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
     var id = parseInt(req.params.id);
-    var index = DB.movies.findIndex(m => m.id == id);
+    var index = DB.palestrantes.findIndex(m => m.id == id);
 
     if (index == -1) {
       res.sendStatus(404);
     } else {
-      DB.movies.splice(index, 1);
+      DB.palestrantes.splice(index, 1);
       res.sendStatus(200);
     }
   }
 })
 
 // Altera os dados de um filme
-app.put("/movies/:id", auth,(req, res) => {
+app.put("/palestrantes/:id",(req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
 
     var id = parseInt(req.params.id);
-    var movie = DB.movies.find(m => m.id == id);
+    var palestrantes = DB.palestrantes.find(m => m.id == id);
 
     if (movie != undefined) {
-      var { title, year, platform } = req.body;
+      var { id, nome, aniversario, hour } = req.body;
 
-      if (title != undefined) {
-        movie.title = title;
+      if (id != undefined) {
+        palestrantes.id = id;
       }
-      if (year != undefined) {
-        movie.year = year;
+      if (nome != undefined) {
+        palestrantes.nome = nome;
       }
-      if (platform != undefined) {
-        movie.platform = platform;
+      if (aniversario != undefined) {
+        palestrantes.aniversario = aniversario;
+      }
+      if (hour != undefined) {
+        palestrantes.hour = hour;
       }
       res.sendStatus(200);
 
@@ -186,8 +242,8 @@ app.post("/auth", (req, res) => {
           }
         })
 
-        res.status(200);
-        res.json({ token: token })
+        // res.status(200);
+        // res.json({ token: token })
       } else {
         res.status(401);
         res.json({ err: "Credenciais inválidas" })
